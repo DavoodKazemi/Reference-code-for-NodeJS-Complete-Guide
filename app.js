@@ -1,6 +1,10 @@
 const http = require('http');
 
+const fs = require('fs');
+
+
 const server = http.createServer((req, res) => {
+    const method = req.method;
     const url = req.url;
     if (url === '/') {
         res.write('<html>');
@@ -9,6 +13,24 @@ const server = http.createServer((req, res) => {
         res.write('</html>');
         // We use "return" here, so the anon function stop executing other lines below
         return res.end();
+    }
+    if (url === '/message' && method === "POST") {
+        const body = [];
+        req.on('data', (chunk) => {
+            console.log(chunk);
+            body.push(chunk);
+        });
+        req.on('end', () => {
+            const parsedBody = Buffer.concat(body).toString();
+            // console.log(parsedBody);
+            const message = parsedBody.split('=')[1];
+            fs.writeFileSync('message.txt', message);
+           
+            res.statusCode = 302;
+            res.setHeader('Location', '/');
+            return res.end();
+        })
+        
     }
     res.setHeader('Content-Type', 'text/html');
     res.write('<html>');
