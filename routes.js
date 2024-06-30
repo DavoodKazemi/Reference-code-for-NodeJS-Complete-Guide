@@ -1,8 +1,8 @@
 const fs = require("fs");
 
 const requsetHandler = (req, res) => {
-    const url = req.url;
-    const method = req.method;
+  const url = req.url;
+  const method = req.method;
   if (url === "/") {
     res.write("<html>");
     res.write("<head><title>My first page</title></head>");
@@ -12,7 +12,7 @@ const requsetHandler = (req, res) => {
     res.write("</html>");
     // We use "return" here, so the anon function stop executing other lines below
     return res.end();
-  }
+  } 
   if (url === "/message" && method === "POST") {
     const body = [];
     req.on("data", (chunk) => {
