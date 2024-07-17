@@ -8,6 +8,11 @@ const bodyParser = require('body-parser');
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
 
+// Set the templating engine to Pug using the 'view engine' property
+app.set('view engine', 'pug');
+// Set the location of the views directory (default is 'views')
+app.set('views', 'views');
+
 const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
