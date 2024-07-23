@@ -3,19 +3,12 @@ const path = require("path");
 const express = require("express");
 // Import body-parser package which was installed
 const bodyParser = require("body-parser");
-// Unlike Pug, handlebars need to be imported.
-const expressHbs = require("express-handlebars");
 
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
 
-// Registering Handlebars as the template engine for .hbs files.
-// First argument (extension) is up to you.
-// app.engine function is an Express function used to register a templating engine.
-// expressHbs.engine function initializes Handlebars, making it compatible with Express and allowing us to use Handlebars templates in our app.
-app.engine("hbs", expressHbs.engine({ layoutsDir: "views/layouts/", defaultLayout: "main-layout", extname: "hbs" }));
 // Set the templating engine to Handlebars using the 'view engine' property
-app.set("view engine", "hbs");
+app.set("view engine", "ejs");
 // Set the location of the views directory (default is 'views')
 app.set("views", "views");
 
