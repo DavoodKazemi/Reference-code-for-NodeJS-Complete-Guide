@@ -12,6 +12,7 @@ app.set("view engine", "ejs");
 // Set the location of the views directory (default is 'views')
 app.set("views", "views");
 
+const errorController = require('./controllers/error');
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
@@ -23,8 +24,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-app.use((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "Page not found", layout: false, path: '' });
-});
+app.use(errorController.get404);
 
 app.listen(3000);
