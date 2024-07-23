@@ -13,7 +13,7 @@ const app = express();
 // First argument (extension) is up to you.
 // app.engine function is an Express function used to register a templating engine.
 // expressHbs.engine function initializes Handlebars, making it compatible with Express and allowing us to use Handlebars templates in our app.
-app.engine("hbs", expressHbs.engine());
+app.engine("hbs", expressHbs.engine({ layoutsDir: "views/layouts/", defaultLayout: "main-layout", extname: "hbs" }));
 // Set the templating engine to Handlebars using the 'view engine' property
 app.set("view engine", "hbs");
 // Set the location of the views directory (default is 'views')
