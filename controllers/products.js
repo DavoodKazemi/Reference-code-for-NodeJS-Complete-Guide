@@ -1,4 +1,4 @@
-const products = [];
+const Product = require('../models/product');
 
 // // Controller function for visiting the Add Product page
 exports.getAddProduct = (req, res, next) => {
@@ -15,12 +15,14 @@ exports.getAddProduct = (req, res, next) => {
 // Controller function for adding a new product
 exports.postAddProduct = (req, res, next) => {
   console.log(req.body);
-  products.push({ title: req.body.title });
+  const product = new Product(req.body.title);
+  product.save();
   res.redirect("/");
 };
 
 // Controller function for displaying products lists
 exports.getProducts = (req, res, next) => {
+  const products = Product.fetchAll();
   res.render("shop", {
     prods: products,
     pageTitle: "Shop",
