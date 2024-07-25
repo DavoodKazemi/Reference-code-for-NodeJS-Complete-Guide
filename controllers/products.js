@@ -17,7 +17,7 @@ exports.postAddProduct = (req, res, next) => {
   console.log(req.body);
   const product = new Product(req.body.title);
   product.save();
-  res.redirect("/");
+  res.redirect("/products");
 };
 
 // Controller function for displaying products lists
@@ -26,10 +26,12 @@ exports.getProducts = (req, res, next) => {
     res.render("shop/product-list", {
       prods: products,
       pageTitle: "Shop",
-      path: "/",
+      path: "/products",
       hasProducts: products.length > 0,
       activeShop: true,
       productCSS: true,
     });
   });
 };
+
+
