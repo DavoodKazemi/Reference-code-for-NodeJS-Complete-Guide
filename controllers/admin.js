@@ -6,9 +6,6 @@ exports.getAddProduct = (req, res, next) => {
   res.render("admin/add-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    productCSS: true,
-    formsCSS: true,
-    activeAddProduct: true,
   });
 };
 
@@ -20,18 +17,12 @@ exports.postAddProduct = (req, res, next) => {
   res.redirect("/products");
 };
 
-// Controller function for displaying products lists
 exports.getProducts = (req, res, next) => {
   Product.fetchAll((products) => {
-    res.render("shop/product-list", {
+    res.render("admin/products", {
       prods: products,
-      pageTitle: "Shop",
-      path: "/products",
-      hasProducts: products.length > 0,
-      activeShop: true,
-      productCSS: true,
+      pageTitle: "Admin products",
+      path: "/admin/products",
     });
   });
 };
-
-
