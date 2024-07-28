@@ -13,6 +13,11 @@ exports.getProducts = (req, res, next) => {
   });
 };
 
+exports.getProduct = (req, res, next) => {
+  const ProdId = req.params.productId;
+  console.log(ProdId);
+  res.redirect('/');
+};
 
 // Controller function for displaying home page
 exports.getIndex = (req, res, next) => {
