@@ -17,9 +17,13 @@ exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
   Product.findById(prodId, product => {
     console.log(product);
+    console.log(`Type of prod: ${typeof product}`);
+    res.render("shop/product-detail", {
+      product: product,
+      pageTitle: product.title,
+      path: '/products'
+    });
   })
-  console.log();
-  res.redirect('/');
 };
 
 // Controller function for displaying home page
