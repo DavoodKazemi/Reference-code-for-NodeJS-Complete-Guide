@@ -28,17 +28,32 @@ module.exports = class Product {
     this.description = description;
   }
 
+  delete() {
+    getProductsFromFile((products) => {
+      const existingProductIndex = products.findIndex((prod) => prod.id === this.id);
+      const updatedProducts = [...products];
+      console.log("We want to delete a product with ID: ", this.id);
+      // Remove the product
+      products.splice(existingProductIndex, 1);
+
+      fs.writeFile(p, JSON.stringify(products), (err) => {
+        console.log(err);
+      });
+    });
+  }
   save() {
     getProductsFromFile((products) => {
-      if (this.id) { // Then we want to update existing product
+      if (this.id) {
+        // Then we want to update existing product
         console.log("We want to update existing product?");
-        const existingProductIndex = products.findIndex((prod) => (prod.id === this.id));
+        const existingProductIndex = products.findIndex((prod) => prod.id === this.id);
         const updatedProducts = [...products];
         updatedProducts[existingProductIndex] = this; // THIS refers to the updated product
         fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
           console.log(err);
         });
-      } else { // Then we want to add a new product
+      } else {
+        // Then we want to add a new product
         console.log("We want to add a new product?");
         this.id = Math.random().toString();
         products.push(this);
