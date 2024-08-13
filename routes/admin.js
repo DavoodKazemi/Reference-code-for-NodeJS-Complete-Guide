@@ -18,4 +18,6 @@ router.post("/add-product", adminController.postAddProduct);
 // Edit product route ends with the product id (the colon indicates that it's a dynamic section of url)
 router.get('/edit-product/:productId', adminController.getEditProduct);
 
+router.post('/edit-product', adminController.postEditProduct);
+
 module.exports = router;
