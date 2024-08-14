@@ -33,4 +33,29 @@ module.exports = class Cart {
       });
     });
   }
+
+  static deleteProduct(id, productPrice) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        console.error("We had error reading the file, so we will abort the operation!");
+        return;
+      }
+      // Spread operator will create a shallow copy of the original object (or array), 
+      // so you can work on it without manipulating the original one.
+      const updatedCart = { ...JSON.parse(fileContent) };
+      // Find the product that we want to delete from Cart inside Cart.json
+      const product = updatedCart.products.find(prod => prod.id === id);
+      // The quantity
+      const productQty = product.qty;
+      // Remove the product we want to delete, from the JSON data of Cart.json
+      updatedCart.products = updatedCart.products.filter(prod => prod.id !== id);
+      // Update the TOTAL PRICE in JSON data
+      updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty;
+
+      // Rewrite the updated JSON data into the cart.json
+      fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
+        console.error(err);
+      });
+    });
+  }
 };
