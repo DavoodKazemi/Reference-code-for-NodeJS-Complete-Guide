@@ -1,1 +1,7 @@
-{"products":[{"id":"wFang1234","qty":1},{"id":"pr&pr1111","qty":2}],"totalPrice":24.97}
+{
+  "products": [
+    { "id": "wFang1234", "qty": 1 },
+    { "id": "pr&pr1111", "qty": 2 }
+  ],
+  "totalPrice": 24.97
+}
