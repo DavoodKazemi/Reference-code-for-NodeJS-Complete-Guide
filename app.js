@@ -4,16 +4,6 @@ const express = require("express");
 // Import body-parser package which was installed
 const bodyParser = require("body-parser");
 
-const db = require("./util/database");
-
-db.execute("SELECT * FROM products")
-  .then(result => {
-    console.log(result[0], result[1]);
-  })
-  .catch(err => {
-    console.log(err);
-  });
-
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
 
