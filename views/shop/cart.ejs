@@ -8,7 +8,7 @@
           <ul>
             <% products.forEach(p => { %>
               <li><%= p.productData.title %> (<%= p.qty %>)</li>
-            <% }) %>
+            <% }); %>
           </ul>
         <% } else { %>
           <h2>No Products in Cart!</h2>

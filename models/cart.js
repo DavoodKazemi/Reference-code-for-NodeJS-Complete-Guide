@@ -40,15 +40,15 @@ module.exports = class Cart {
         console.error("We had error reading the file, so we will abort the operation!");
         return;
       }
-      // Spread operator will create a shallow copy of the original object (or array), 
+      // Spread operator will create a shallow copy of the original object (or array),
       // so you can work on it without manipulating the original one.
       const updatedCart = { ...JSON.parse(fileContent) };
       // Find the product that we want to delete from Cart inside Cart.json
-      const product = updatedCart.products.find(prod => prod.id === id);
+      const product = updatedCart.products.find((prod) => prod.id === id);
       // The quantity
       const productQty = product.qty;
       // Remove the product we want to delete, from the JSON data of Cart.json
-      updatedCart.products = updatedCart.products.filter(prod => prod.id !== id);
+      updatedCart.products = updatedCart.products.filter((prod) => prod.id !== id);
       // Update the TOTAL PRICE in JSON data
       updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty;
 
@@ -61,13 +61,25 @@ module.exports = class Cart {
 
   static getCart(cb) {
     fs.readFile(p, (err, fileContent) => {
-      const cart = JSON.parse(fileContent);
       if (err) {
-        cb(null); 
-      } else {
+        // If the error code is 'ENOENT', it means the file doesn't exist
+        if (err.code === "ENOENT") {
+          // Return an empty cart since the file doesn't exist
+          cb({ products: [], totalPrice: 0 });
+        } else {
+          cb(null); // Handle other types of errors
+        }
+        return;
+      }
+
+      // Handle case where the file exists but is empty or invalid
+      try {
+        const cart = fileContent.length ? JSON.parse(fileContent) : { products: [], totalPrice: 0 };
         cb(cart);
+      } catch (parseError) {
+        // If JSON.parse fails, return an empty cart or handle the error
+        cb({ products: [], totalPrice: 0 });
       }
     });
-
   }
 };
