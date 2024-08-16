@@ -50,7 +50,7 @@ module.exports = class Cart {
       // Remove the product we want to delete, from the JSON data of Cart.json
       updatedCart.products = updatedCart.products.filter((prod) => prod.id !== id);
       // Update the TOTAL PRICE in JSON data
-      updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty;
+      updatedCart.totalPrice = Math.round((updatedCart.totalPrice - productPrice * productQty) * 100) / 100;
 
       // Rewrite the updated JSON data into the cart.json
       fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
