@@ -4,6 +4,8 @@ const express = require("express");
 // Import body-parser package which was installed
 const bodyParser = require("body-parser");
 
+const sequelize = require("./util/database");
+
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
 
@@ -26,4 +28,12 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-app.listen(3000);
+sequelize
+  .sync()
+  .then((result) => {
+    // console.log(result);
+    app.listen(3000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
