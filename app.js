@@ -25,6 +25,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Make the public folder accessible to be able to use the files inside it statically
 app.use(express.static(path.join(__dirname, "public")));
 
+// Register a new middleware so to store the dummy user in request, making us able to use the User when creating a new Product
+app.use((req, res, next) => {
+  User.findByPk(1).then(user => {
+    req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
+    next();
+  }).catch((err) => {
+    console.log(err);
+  });
+});
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
