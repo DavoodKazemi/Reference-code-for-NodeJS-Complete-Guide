@@ -5,6 +5,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const sequelize = require("./util/database");
+const Product = require("./models/product");
+const User = require("./models/user");
 
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
@@ -28,8 +30,12 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+User.hasMany(Product);
+
 sequelize
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((result) => {
     // console.log(result);
     app.listen(3000);
