@@ -50,8 +50,8 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
-  .sync( { force: true } )
-  // .sync()
+  // .sync( { force: true } )
+  .sync()
   .then(result => {
     // console.log(result);
     return User.findByPk(1); //Check if we have a user at least, if not we want to create a user
@@ -62,7 +62,10 @@ sequelize
     }
     return user;
   })
-  .then((user) => {
+  .then(user => {
+    return user.createCart();
+  })
+  .then((cart) => {
     // console.log(user);
     app.listen(3000);
   })
