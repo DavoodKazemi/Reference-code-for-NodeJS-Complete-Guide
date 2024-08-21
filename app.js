@@ -31,12 +31,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Register a new middleware so to store the dummy user in request, making us able to use the User when creating a new Product
 app.use((req, res, next) => {
-  User.findByPk(1).then(user => {
-    req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
-    next();
-  }).catch((err) => {
-    console.log(err);
-  });
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use("/admin", adminRoutes);
@@ -52,23 +54,35 @@ Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 Order.belongsTo(User);
 User.hasMany(Order);
-Order.belongsToMany(Product, {through:OrderItem});
+Order.belongsToMany(Product, { through: OrderItem });
 
 sequelize
   // .sync( { force: true } )
   .sync()
-  .then(result => {
+  .then((result) => {
     // console.log(result);
     return User.findByPk(1); //Check if we have a user at least, if not we want to create a user
   })
-  .then(user => {
+  .then((user) => {
     if (!user) {
       return User.create({ name: "Dave", email: "sacred@test.com" });
     }
     return user;
   })
   .then(user => {
-    return user.createCart();
+    // Check if the user already has a cart
+    return user.getCart().then(cart => {
+      if (!cart) {
+        console.log('50');
+
+        // If no cart exists, create a new one
+        return user.createCart();
+      }
+      console.log('51');
+
+      // Return the existing cart
+      return cart;
+    });
   })
   .then((cart) => {
     // console.log(user);
