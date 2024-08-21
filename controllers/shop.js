@@ -85,29 +85,39 @@ exports.postCart = (req, res, next) => {
       if (products.length > 0) {
         product = products[0];
       }
-      if (product) { //The product is already in the Cart
-        const oldQuantity = product.cartItem.quantity ;
+      if (product) {
+        //The product is already in the Cart
+        const oldQuantity = product.cartItem.quantity;
         newQuantity = oldQuantity + 1;
         return product;
       }
       return Product.findByPk(prodId);
     })
-    .then(product => {
+    .then((product) => {
       return fetchedCart.addProduct(product, { through: { quantity: newQuantity } });
     })
     .then(() => {
-      res.redirect('/cart');
+      res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  console.log("Product with this id is t obe deleted from cart:", prodId);
-  Product.findById(prodId, (product) => {
-    Cart.deleteProduct(prodId, product.price);
-    res.redirect("/cart");
-  });
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then(result => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
+  console.log("Product with this id is to be deleted from cart:", prodId);
 };
 
 exports.getOrders = (req, res, next) => {
