@@ -1,5 +1,4 @@
 const Product = require("../models/product");
-const Cart = require("../models/cart");
 const { Sequelize } = require("sequelize");
 
 // Controller function for displaying products lists
@@ -113,11 +112,36 @@ exports.postCartDeleteProduct = (req, res, next) => {
       const product = products[0];
       return product.cartItem.destroy();
     })
-    .then(result => {
+    .then((result) => {
       res.redirect("/cart");
     })
     .catch((err) => console.log(err));
   console.log("Product with this id is to be deleted from cart:", prodId);
+};
+
+exports.postOrder = (req, res, next) => {
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts();
+    })
+    .then((products) => {
+      return req.user
+        .createOrder()
+        .then((order) => {
+          order.addProducts(
+            products.map((product) => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
+        })
+        .catch((err) => consoleF.log(err));
+    })
+    .then((result) => {
+      res.redirect("/orders");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
