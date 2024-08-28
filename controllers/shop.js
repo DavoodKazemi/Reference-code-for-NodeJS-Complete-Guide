@@ -3,7 +3,7 @@ const { Sequelize } = require("sequelize");
 
 // Controller function for displaying products lists
 exports.getProducts = (req, res, next) => {
-  Product.findAll()
+  Product.fetchAll()
     .then((products) => {
       res.render("shop/product-list", {
         prods: products,
@@ -39,7 +39,7 @@ exports.getProduct = (req, res, next) => {
 
 // Controller function for displaying home page
 exports.getIndex = (req, res, next) => {
-  Product.findAll()
+  Product.fetchAll()
     .then((products) => {
       res.render("shop/index", {
         prods: products,
