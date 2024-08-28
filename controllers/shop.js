@@ -16,25 +16,25 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  Product.findAll({ where: { id: prodId } })
-    .then((products) => {
-      res.render("shop/product-detail", {
-        product: products[0],
-        pageTitle: products[0].title,
-        path: "/products",
-      });
-    })
-    .catch((err) => console.log(err));
-
-  // Product.findByPk(prodId)
-  //   .then(product => {
+  // Product.findAll({ where: { id: prodId } })
+  //   .then((products) => {
   //     res.render("shop/product-detail", {
-  //       product: product,
-  //       pageTitle: product.title,
+  //       product: products[0],
+  //       pageTitle: products[0].title,
   //       path: "/products",
   //     });
   //   })
   //   .catch((err) => console.log(err));
+
+  Product.findById(prodId)
+    .then((product) => {
+      res.render("shop/product-detail", {
+        product: product,
+        pageTitle: product.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 // Controller function for displaying home page
@@ -151,12 +151,12 @@ exports.postOrder = (req, res, next) => {
 
 exports.getOrders = (req, res, next) => {
   req.user
-    .getOrders({include: ['products']})
+    .getOrders({ include: ["products"] })
     .then((orders) => {
       res.render("shop/orders", {
         pageTitle: "Your Orders",
         path: "/orders",
-        orders: orders
+        orders: orders,
       });
     })
     .catch((err) => console.log(err));
