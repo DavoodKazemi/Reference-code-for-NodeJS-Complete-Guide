@@ -4,7 +4,11 @@ const express = require("express");
 // Import body-parser package which was installed
 const bodyParser = require("body-parser");
 
-const mongoConnect = require('./util/database').mongoConnect;
+const { mongodb } = require("mongodb");
+
+const mongoConnect = require("./util/database").mongoConnect;
+const getDb = require("./util/database").getDb;
+const User = require("./models/user");
 
 // Create a new Express application instance and store it in a constant named 'app'.
 const app = express();
@@ -25,15 +29,15 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Register a new middleware so to store the dummy user in request, making us able to use the User when creating a new Product
 app.use((req, res, next) => {
-  // User.findByPk(1)
-  //   .then((user) => {
-      // req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
-    //   next();
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
-    next();
+  User.findById("66cf77ceda241a0f7c4cfd86")
+    .then((user) => {
+      req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
+      console.log("user: ", user);
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.use("/admin", adminRoutes);
@@ -41,7 +45,23 @@ app.use(shopRoutes);
 
 app.use(errorController.get404);
 
-
 mongoConnect(() => {
-  app.listen(3000);
+  const db = getDb();
+  db.collection("users")
+    .findOne()
+    .then((user) => {
+      if (!user) {
+        console.log("We don't have a user!");
+        const newUser = new User("Dave", "sacred@test.com");
+        return newUser.save();
+      } else {
+        console.log("We already have a user!");
+      }
+    })
+    .then(() => {
+      app.listen(3000);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
