@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
   User.findById("66cf77ceda241a0f7c4cfd86")
     .then((user) => {
-      req.user = user; //Store the user retrieved from DB into the request (by adding a new field to the request)
+      req.user = new User(user.name, user.email, user.cart, user._id); //Store the user retrieved from DB into the request (by adding a new field to the request)
       console.log("user: ", user);
       next();
     })
@@ -46,22 +46,5 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 mongoConnect(() => {
-  const db = getDb();
-  db.collection("users")
-    .findOne()
-    .then((user) => {
-      if (!user) {
-        console.log("We don't have a user!");
-        const newUser = new User("Dave", "sacred@test.com");
-        return newUser.save();
-      } else {
-        console.log("We already have a user!");
-      }
-    })
-    .then(() => {
-      app.listen(3000);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  app.listen(3000);
 });
