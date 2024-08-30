@@ -28,7 +28,7 @@ class User {
     // const cartProduct = this.cart.items.findIndex(cp => {
     //   return cp._id === product._id;
     // });
-    const updatedCart = { items: [{ ...product, quantity: 1 }] };
+    const updatedCart = { items: [{ productId: new ObjectId(this._id) , quantity: 1 }] };
     // console.log("product: ", product);
     // console.log("User ID (this._id):", this._id);
     // console.log("Cart being updated:", updatedCart);
