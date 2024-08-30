@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Register a new middleware so to store the dummy user in request, making us able to use the User when creating a new Product
 app.use((req, res, next) => {
-  User.findById("66cf77ceda241a0f7c4cfd86")
+  User.findById("66d21a6baa20710b5c405553")
     .then((user) => {
       req.user = new User(user.name, user.email, user.cart, user._id); //Store the user retrieved from DB into the request (by adding a new field to the request)
       console.log("user: ", user);
