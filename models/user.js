@@ -25,11 +25,16 @@ class User {
   }
 
   addToCart(product) {
-    const cartProductIndex = this.cart.items.findIndex((cp) => {
-      return cp.productId === product._id;
+    // Ensure the cart and cart items are initialized
+    const cart = this.cart ? this.cart : { items: [] };
+    const cartItems = cart.items ? cart.items : [];
+
+    const cartProductIndex = cartItems.findIndex((cp) => {
+      return cp.productId.toString() === product._id.toString();
     });
+
     let newQuantity = 1;
-    const updatedCartItems = [...this.cart.items];
+    const updatedCartItems = [...cartItems];
 
     if (cartProductIndex >= 0) {
       newQuantity = this.cart.items[cartProductIndex].quantity + 1;
@@ -38,7 +43,7 @@ class User {
       updatedCartItems.push({ productId: new ObjectId(product._id), quantity: newQuantity });
     }
     const updatedCart = {
-      items: updatedCartItems
+      items: updatedCartItems,
     };
     // const updatedCart = { items: [{ productId: new ObjectId(this._id), quantity: 1 }] };
     // console.log("product: ", product);
