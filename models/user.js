@@ -82,10 +82,14 @@ class User {
       });
   }
 
-  deleteCartItem(prodId) {
+  deleteItemFromCart(prodId) {
+    const updatedCartItems = this.cart.items.filter((item) => {
+      return item.productId.toString() !== prodId.toString();
+    });
     const db = getDb();
-    const updatedCart = this.cart.items.filter(obj => obj.productId.toString() !== prodId.toString());
-    return db.collection("users").updateOne({ _id: new ObjectId(this._id) }, { $set: { cart: {items: updatedCart} } });
+    return db
+      .collection("users")
+      .updateOne({ _id: new ObjectId(this._id) }, { $set: { cart: { items: updatedCartItems } } });
   }
 
   static findById(userId) {
