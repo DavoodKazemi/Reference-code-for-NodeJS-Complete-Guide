@@ -59,8 +59,6 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         products: products,
       });
-    }).then((products) => {
-      console.log('products: ', products);
     })
     .catch((err) => console.log(err));
 };
@@ -73,6 +71,7 @@ exports.postCart = (req, res, next) => {
     })
     .then((result) => {
       console.log(result);
+      res.redirect("/cart");
     });
   // let fetchedCart;
   // let newQuantity = 1;
