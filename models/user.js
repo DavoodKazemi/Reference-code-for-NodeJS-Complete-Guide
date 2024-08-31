@@ -25,10 +25,11 @@ class User {
   }
 
   addToCart(product) {
-    // Ensure the cart and cart items are initialized
+    // Ensure the cart and cart items are initialized for this user
     const cart = this.cart ? this.cart : { items: [] };
     const cartItems = cart.items ? cart.items : [];
 
+    // Check if the product is already in cart or not
     const cartProductIndex = cartItems.findIndex((cp) => {
       return cp.productId.toString() === product._id.toString();
     });
@@ -79,6 +80,12 @@ class User {
       .catch((err) => {
         console.log(err);
       });
+  }
+
+  deleteCartItem(prodId) {
+    const db = getDb();
+    const updatedCart = this.cart.items.filter(obj => obj.productId.toString() !== prodId.toString());
+    return db.collection("users").updateOne({ _id: new ObjectId(this._id) }, { $set: { cart: {items: updatedCart} } });
   }
 
   static findById(userId) {
