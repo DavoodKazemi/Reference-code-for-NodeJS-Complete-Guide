@@ -8,9 +8,13 @@
 }
 
 .cart__item {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 24px;
   align-items: center;
-  justify-content: space-between;
+  /* display: flex;
+  align-items: center;
+  justify-content: space-between; */
   padding: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
@@ -21,4 +25,3 @@
   font-size: 1.2rem;
   margin: 0;
 }
-
