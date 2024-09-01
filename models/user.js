@@ -92,6 +92,17 @@ class User {
       .updateOne({ _id: new ObjectId(this._id) }, { $set: { cart: { items: updatedCartItems } } });
   }
 
+  addOrder() {
+    const db = getDb();
+    return db
+      .collection("orders")
+      .insertOne(this.cart)
+      .then((result) => {
+        this.cart = { items: [] }; // Clear the cart in the user object
+        return db.collection("users").updateOne({ _id: new Object(this._id) }, { $set: { cart: { items: [] } } });
+      });
+  }
+
   static findById(userId) {
     const db = getDb();
     return db.collection("users").findOne({ _id: new ObjectId(userId) });
