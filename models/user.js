@@ -105,15 +105,15 @@ class User {
         };
         return db.collection("orders").insertOne(order); 
       })
-      .then((result) => {
+      .then(() => {
         this.cart = { items: [] }; // Clear the cart in the user object
         return db.collection("users").updateOne({ _id: new Object(this._id) }, { $set: { cart: { items: [] } } }); // Clear the cart of the user in the database
       });
   }
 
   getOrders() {
-    // const db = getDb();
-    // return db
+    const db = getDb();
+    return db.collection('orders').find({'user._id': new ObjectId(this._id)}).toArray();
     //   .collection("orders").find(_id: {this._id})
   }
 
