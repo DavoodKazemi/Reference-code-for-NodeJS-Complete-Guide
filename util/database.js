@@ -1,15 +1,16 @@
 const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient; // Accessing mongodb constructor
 
+require('dotenv').config();
+
 let _db;
 
 // A method for connecting to db and storing the connection
 const mongoConnect = (callback) => {
-  MongoClient.connect(
-    "mongodb+srv://username:password@cluster0.wzyic.mongodb.net/shop?retryWrites=true&w=majority&appName=Cluster0"  )
+  MongoClient.connect(process.env.MONGODB_URI)
     .then((result) => {
       console.log("Connected!");
-      _db = result.db() // storing the connection
+      _db = result.db(); // storing the connection
       callback();
     })
     .catch((err) => {
@@ -24,7 +25,7 @@ const getDb = () => {
     return _db;
   }
   throw "No database found!";
-}
+};
 
 exports.mongoConnect = mongoConnect;
 exports.getDb = getDb;
