@@ -61,12 +61,44 @@ class User {
     const productIds = this.cart.items.map((i) => {
       return i.productId;
     });
-    console.log("productIds: ", productIds);
-    return db
+
+    if (productIds.length > 0) {
+      console.log("Product IDs in cart: ", productIds);
+    } else {
+      console.log("Cart is empty.");
+    }
+    
+    const cartItems = db
       .collection("products")
       .find({ _id: { $in: productIds } }) // Get the products info from database, with the help of productIds
       .toArray()
       .then((products) => {
+
+        // Start Clean the cart items of the user from the deleted products
+        // Extract ids of the items from products collection
+        const existingProductsIds = [...products].map((p) => {
+          return p._id.toString();
+        });
+        // Update the js object to clean it from deleted products' ids
+        const cleanedCartItems = [...this.cart.items].filter((item) => {
+          return existingProductsIds.includes(item.productId.toString());
+        });
+        // Clean the data in the database too
+        db.collection("users").updateOne(
+          { _id: new ObjectId(this._id) },
+          { $set: { cart: { items: cleanedCartItems } } }
+        );
+
+        // Log to see the data
+        // if (existingProductsIds.length > 0) {
+        //   console.log("All the products in the cart which are existed in Products collection: ", existingProductsIds);
+        //   console.log("This.cart.items now is: ", this.cart.items);
+        //   console.log("This.cart.items should be: ", cleanedCartItems);
+        // } else {
+        //   console.log("Cart is empty.");
+        // }
+        // END Clean the cart items of the user from the deleted products
+
         return products.map((p) => {
           return {
             ...p, //The array of products we got from database
@@ -80,6 +112,8 @@ class User {
       .catch((err) => {
         console.log(err);
       });
+
+    return cartItems;
   }
 
   deleteItemFromCart(prodId) {
@@ -103,7 +137,7 @@ class User {
             name: this.name,
           },
         };
-        return db.collection("orders").insertOne(order); 
+        return db.collection("orders").insertOne(order);
       })
       .then(() => {
         this.cart = { items: [] }; // Clear the cart in the user object
@@ -113,7 +147,10 @@ class User {
 
   getOrders() {
     const db = getDb();
-    return db.collection('orders').find({'user._id': new ObjectId(this._id)}).toArray();
+    return db
+      .collection("orders")
+      .find({ "user._id": new ObjectId(this._id) })
+      .toArray();
     //   .collection("orders").find(_id: {this._id})
   }
 
